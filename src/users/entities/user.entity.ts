@@ -31,7 +31,7 @@ export class UserEntity implements User {
   passwordResetToken: string | null;
 
   @ApiProperty()
-  PasswordResetTokenExpiry: Date | null;
+  passwordResetTokenExpiry: Date | null;
 
   @ApiProperty()
   passwordResetAt: Date | null;

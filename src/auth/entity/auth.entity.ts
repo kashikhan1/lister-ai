@@ -31,7 +31,7 @@ export class AuthEntity {
   passwordResetToken: string | null;
 
   @ApiProperty()
-  PasswordResetTokenExpiry: Date | null;
+  PasswordResetTokenExpiry?: Date | null;
 
   @ApiProperty()
   passwordResetAt: Date | null;
