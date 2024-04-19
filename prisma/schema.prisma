@@ -13,10 +13,14 @@ datasource db {
 // prisma/schema.prisma
 model Article {
   id          Int      @id @default(autoincrement())
-  title       String   @unique
+  title       String   
   description String?
   body        String
+  imgurl      String?
+  topic       String?
+  views       Int?
   published   Boolean  @default(false)
+  featured    Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   author      User?    @relation(fields: [authorId], references: [id])
@@ -27,14 +31,15 @@ model User {
   id                       Int       @id @default(autoincrement())
   name                     String
   email                    String    @unique
-  password                 String
+  password                 String?
   provider                 String    @default("custom")
   createdAt                DateTime  @default(now())
   updatedAt                DateTime  @updatedAt
   passwordResetToken       String?   @unique
-  PasswordResetTokenExpiry DateTime?
+  passwordResetTokenExpiry DateTime?
   passwordResetAt          DateTime?
   articles                 Article[]
+  bookmark    Bookmark[]
 }
 
 model Subscriber {
@@ -45,13 +50,43 @@ model Subscriber {
   updatedAt DateTime @updatedAt
 }
 
-// model Category {
-//   id        Int       @id @default(autoincrement())
-//   name      String    @unique
-//   createdAt DateTime  @default(now())
-//   updatedAt DateTime  @updatedAt
-//   articles  Article[]
-// }
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  subCategory  SubCategory[]
+}
+
+model SubCategory {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  category      Category?    @relation(fields: [categoryId], references: [id])
+  categoryId    Int?
+  tool Tool[]
+}
+
+model Tool {
+  id        Int       @id @default(autoincrement())
+  name      String    
+  description String?
+  body        String
+  imgurl      String?
+  topic       String?
+  views       Int?
+  published   Boolean  @default(false)
+  featured    Boolean  @default(false)
+  verified    Boolean  @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  subCategory      SubCategory?    @relation(fields: [subCategoryId], references: [id])
+  subCategoryId    Int?
+  tag      Tag?    @relation(fields: [tagId], references: [id])
+  tagId    Int?
+  bookmark  Bookmark[]
+  }
 
 // model Comment {
 //   id        Int       @id @default(autoincrement())
@@ -74,31 +109,23 @@ model Subscriber {
 //   userId    Int
 // }
 
-// model Tag {
-//   id        Int       @id @default(autoincrement())
-//   name      String    @unique
-//   createdAt DateTime  @default(now())
-//   updatedAt DateTime  @updatedAt
-//   articles  Article[]
-// }
+model Tag {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  tool      Tool[]
+}
 
-// model Tool {
-//   id        Int       @id @default(autoincrement())
-//   name      String    @unique
-//   createdAt DateTime  @default(now())
-//   updatedAt DateTime  @updatedAt
-//   articles  Article[]
-// }
-
-// model Bookmark {
-//   id        Int      @id @default(autoincrement())
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-//   article   Article  @relation(fields: [articleId], references: [id])
-//   articleId Int
-//   user      User     @relation(fields: [userId], references: [id])
-//   userId    Int
-// }
+model Bookmark {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tool   Tool  @relation(fields: [toolId], references: [id])
+  toolId Int
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+}
 
 // model Report {
 //   id        Int      @id @default(autoincrement())
@@ -126,50 +153,4 @@ model FAQ {
   answer    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-model Image {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  url       String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model CommentImage {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  url       String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  // comment   Comment? @relation(fields: [commentId], references: [id])
-  // commentId Int?
-}
-
-// model ArticleImage {
-//   id        Int      @id @default(autoincrement())
-//   name      String   @unique
-//   url       String
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-//   article   Article? @relation(fields: [articleId], references: [id])
-//   articleId Int?
-// }
-
-model ArticleVideo {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  url       String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Contact {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String
-  email     String
-  subject   String?
-  message   String?
 }

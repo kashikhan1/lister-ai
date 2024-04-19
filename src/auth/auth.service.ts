@@ -16,7 +16,7 @@ export class AuthService {
     private prisma: PrismaService,
     private jwtService: JwtService,
     private mailService: MailService,
-    private usersService: UsersService
+    private usersService: UsersService,
   ) {}
 
   async login(email: string, password: string): Promise<AuthEntity> {
@@ -34,7 +34,10 @@ export class AuthService {
 
     const jwtToken = this.jwtService.sign({ userId: user.id });
 
+    delete user['password'];
+
     return {
+      ...user,
       accessToken: jwtToken,
     };
   }
@@ -47,6 +50,7 @@ export class AuthService {
 
       const userId = decoded.id;
 
+      console.log(userId, newPassword);
       // await this.usersService.update({...userId, newPassword});
       // Find the user by ID and update the password
       // Remember to hash the newPassword before saving it to the database

@@ -1,11 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete,ParseIntPipe,  UseGuards,
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Query,
+  Delete,
+  ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UserEntity } from './entities/user.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { QueryOptionsDto } from './dto/query-options.dto';
 
 @Controller('users')
 @ApiTags('users')
@@ -22,8 +38,25 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserEntity, isArray: true })
-  async findAll() {
-    const users = await this.usersService.findAll();
+  async findAll(@Query() queryOptions: QueryOptionsDto) {
+    const { page, pageSize, search, orderBy } = queryOptions;
+    const skip = (page - 1) * pageSize || 0;
+    const take = pageSize || 20;
+    const where = search
+      ? {
+          OR: [
+            { name: { contains: search, mode: 'insensitive' } },
+            { email: { contains: search, mode: 'insensitive' } },
+          ],
+        }
+      : {};
+    const orderByObject = orderBy ? JSON.parse(orderBy) : { createdAt: 'desc' };
+    const users = await this.usersService.findAll(
+      skip,
+      take,
+      where,
+      orderByObject,
+    );
     return users.map((user) => new UserEntity(user));
   }
 

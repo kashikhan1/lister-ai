@@ -1,5 +1,3 @@
-
-
 import { Article } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserEntity } from 'src/users/entities/user.entity';
@@ -17,8 +15,20 @@ export class ArticleEntity implements Article {
   @ApiProperty()
   body: string;
 
+  @ApiProperty({ required: false, nullable: true })
+  imgurl: string | null;
+
+  @ApiProperty({ required: false, nullable: true })
+  topic: string | null;
+
+  @ApiProperty({ required: false, nullable: true })
+  views: number | null;
+
   @ApiProperty()
   published: boolean;
+
+  @ApiProperty()
+  featured: boolean;
 
   @ApiProperty()
   createdAt: Date;
