@@ -1,45 +1,37 @@
 import { Injectable } from '@nestjs/common';
-// import * as AWS from 'aws-sdk';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
 @Injectable()
 export class AppService {
-  AWS_S3_BUCKET = 'lister-dev';
-  // s3 = new AWS.S3({
-  //   accessKeyId: process.env.S3_ACCESS_KEY,
-  //   secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-  // });
+  s3 = new S3Client({
+    region: process.env.BUCKET_REGION,
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    },
+  });
 
   async uploadFile(file: any) {
-    console.log(file);
-    // const { originalname } = file;
+    const { originalname, buffer, mimetype } = file;
+    const params: any = {
+      Bucket: process.env.BUCKET_NAME,
+      Key: `${Date.now()}_${originalname}`,
+      Body: buffer,
+      ContentType: mimetype,
+      ACL: 'public-read',
+    };
+    try {
+      const data = await this.s3.send(new PutObjectCommand(params));
 
-    // return await this.s3_upload(
-    //   file.buffer,
-    //   this.AWS_S3_BUCKET,
-    //   originalname,
-    //   file.mimetype,
-    // );
+      return {
+        ...data,
+        url: `File uploaded successfully. File URL: https://${params.Bucket}.s3.amazonaws.com/${params.Key}`,
+      };
+    } catch (error) {
+      throw Error(error);
+    }
   }
 
-  // async s3_upload(file: any, bucket: any, name: any, mimetype: any) {
-  //   const params = {
-  //     Bucket: bucket,
-  //     Key: String(`${Date.now()}-${name}`),
-  //     Body: file,
-  //     ACL: 'public-read',
-  //     ContentType: mimetype,
-  //     ContentDisposition: 'inline',
-  //     CreateBucketConfiguration: {
-  //       LocationConstraint: 'eu-north-1',
-  //     },
-  //   };
-
-  //   try {
-  //     return this.s3.upload(params).promise();
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // }
   googleLogin(req: any) {
     if (!req.user) {
       return 'No user from google';
