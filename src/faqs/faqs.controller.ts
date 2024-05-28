@@ -48,4 +48,3 @@ export class FaqsController {
     return this.faqsService.remove(+id);
   }
 }
-

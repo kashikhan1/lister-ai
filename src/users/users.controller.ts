@@ -40,7 +40,7 @@ export class UsersController {
   @ApiOkResponse({ type: UserEntity, isArray: true })
   async findAll(@Query() queryOptions: QueryOptionsDto) {
     const { page, pageSize, search, orderBy } = queryOptions;
-    const skip = (page - 1) * pageSize || 0;
+    const skip = (page - 1) * pageSize > 0 ? (page - 1) * pageSize : 0;
     const take = pageSize || 20;
     const where = search
       ? {

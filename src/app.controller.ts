@@ -25,6 +25,7 @@ export class AppController {
   googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
     const { user } = this.appService.googleLogin(req) as any;
     const targetUrl: string = req.headers.host;
+    console.log(targetUrl);
     const redirectUrl: string = targetUrl.includes('http')
       ? targetUrl
       : `http://${targetUrl}`;

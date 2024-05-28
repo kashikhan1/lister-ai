@@ -1,6 +1,26 @@
+import { IsOptional, IsString, IsNumber } from 'class-validator';
+import { Type } from 'class-transformer';
+
 export class QueryOptionsDto {
-  page: number;
-  pageSize: number;
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  page?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  pageSize?: number;
+
+  @IsOptional()
+  @IsString()
   search?: string;
-  orderBy?: any;
+
+  @IsOptional()
+  @IsString()
+  orderBy?: string;
+
+  @IsOptional()
+  @IsString()
+  featured?: string;
 }

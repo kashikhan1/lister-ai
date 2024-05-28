@@ -15,6 +15,7 @@ import { UpdateArticleDto } from './dto/update-article.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ArticleEntity } from './entities/article.entity';
 import { QueryOptionsDto } from '../users/dto/query-options.dto';
+import { title } from 'process';
 
 @Controller('articles')
 @ApiTags('articles')
@@ -32,22 +33,37 @@ export class ArticlesController {
   @Get()
   @ApiOkResponse({ type: ArticleEntity, isArray: true })
   async findAll(@Query() queryOptions: QueryOptionsDto) {
-    const { page, pageSize, search, orderBy } = queryOptions;
-    const skip = (page - 1) * pageSize || 0;
+    const { page, pageSize, search, orderBy, featured } = queryOptions;
+    console.log(`............`, queryOptions);
+    const skip = (page - 1) * pageSize > 0 ? (page - 1) * pageSize : 0;
     const take = pageSize || 20;
-    const where = search
-      ? {
-          OR: [
-            { name: { contains: search, mode: 'insensitive' } },
-            { email: { contains: search, mode: 'insensitive' } },
-          ],
-        }
-      : {};
+
+    const searchCriteria = {
+      AND: [],
+    };
+    if (search) {
+      console.log('search', search);
+      console.log('search', search);
+      console.log('search', search);
+      console.log('search', search);
+      console.log('search', search);
+      searchCriteria.AND.push({
+        OR: [
+          { title: { contains: search, mode: 'insensitive' } },
+          { description: { contains: search, mode: 'insensitive' } },
+        ],
+      });
+    }
+    if (featured) {
+      searchCriteria.AND.push({
+        featured: true,
+      });
+    }
     const orderByObject = orderBy ? JSON.parse(orderBy) : { createdAt: 'desc' };
     const articles = await this.articlesService.findAll(
       skip,
       take,
-      where,
+      searchCriteria,
       orderByObject,
     );
     return articles.map((article) => new ArticleEntity(article));
@@ -57,13 +73,13 @@ export class ArticlesController {
   @ApiOkResponse({ type: ArticleEntity, isArray: true })
   async findTrends(@Query() queryOptions: QueryOptionsDto) {
     const { page, pageSize, search, orderBy } = queryOptions;
-    const skip = (page - 1) * pageSize || 0;
+    const skip = (page - 1) * pageSize > 0 ? (page - 1) * pageSize : 0;
     const take = pageSize || 20;
     const where = search
       ? {
           OR: [
-            { name: { contains: search, mode: 'insensitive' } },
-            { email: { contains: search, mode: 'insensitive' } },
+            { topic: { contains: search, mode: 'insensitive' } },
+            { title: { contains: search, mode: 'insensitive' } },
           ],
         }
       : {};
@@ -80,22 +96,31 @@ export class ArticlesController {
   @Get('drafts')
   @ApiOkResponse({ type: ArticleEntity, isArray: true })
   async findDrafts(@Query() queryOptions: QueryOptionsDto) {
-    const { page, pageSize, search, orderBy } = queryOptions;
-    const skip = (page - 1) * pageSize || 0;
+    const { page, pageSize, search, orderBy, featured } = queryOptions;
+    const skip = (page - 1) * pageSize > 0 ? (page - 1) * pageSize : 0;
     const take = pageSize || 20;
-    const where = search
-      ? {
-          OR: [
-            { name: { contains: search, mode: 'insensitive' } },
-            { email: { contains: search, mode: 'insensitive' } },
-          ],
-        }
-      : {};
+
+    const searchCriteria = {
+      AND: [],
+    };
+    if (search) {
+      searchCriteria.AND.push({
+        OR: [
+          { title: { contains: search, mode: 'insensitive' } },
+          { description: { contains: search, mode: 'insensitive' } },
+        ],
+      });
+    }
+    if (featured) {
+      searchCriteria.AND.push({
+        featured: true,
+      });
+    }
     const orderByObject = orderBy ? JSON.parse(orderBy) : { createdAt: 'desc' };
     const drafts = await this.articlesService.findDrafts(
       skip,
       take,
-      where,
+      searchCriteria,
       orderByObject,
     );
     return drafts.map((draft) => new ArticleEntity(draft));

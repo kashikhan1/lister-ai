@@ -16,6 +16,9 @@ export class ArticlesService {
       skip,
       take,
       orderBy,
+      include: {
+        author: true,
+      },
       where: { ...where, published: true },
     });
   }
@@ -36,10 +39,7 @@ export class ArticlesService {
   async findTrends(skip: number, take: number, where: any, orderBy: any) {
     const now: Date = new Date();
     const articles = await this.prisma.article.findMany({
-      orderBy: {
-        views: 'desc',
-        ...orderBy,
-      },
+      orderBy: [{ views: 'desc' }, orderBy],
       where: {
         published: true,
         ...where,

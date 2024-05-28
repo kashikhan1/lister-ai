@@ -13,18 +13,103 @@ export class ToolsService {
 
   async findAll(skip: number, take: number, where: any, orderBy: any) {
     return this.prisma.tool.findMany({
+      select: {
+        id: true,
+        name: true,
+        body: true,
+        imgurl: true,
+        topic: true,
+        views: true,
+        published: true,
+        featured: true,
+        verified: true,
+        createdAt: true,
+        updatedAt: true,
+        tagId: true,
+        subCategoryId: true,
+        _count: {
+          select: { bookmark: true },
+        },
+        tag: {
+          select: {
+            id: true,
+            name: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+        subCategory: {
+          select: {
+            id: true,
+            name: true,
+            createdAt: true,
+            updatedAt: true,
+            categoryId: true,
+            category: {
+              select: {
+                id: true,
+                name: true,
+                createdAt: true,
+                updatedAt: true,
+              },
+            },
+          },
+        },
+      },
       skip,
       take,
       where,
       orderBy,
-      include: {
-        tag: true,
-      },
     });
   }
 
   findOne(id: number) {
-    const tool = this.prisma.tool.findUnique({ where: { id } });
+    const tool = this.prisma.tool.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        body: true,
+        imgurl: true,
+        topic: true,
+        views: true,
+        published: true,
+        featured: true,
+        verified: true,
+        createdAt: true,
+        updatedAt: true,
+        tagId: true,
+        subCategoryId: true,
+        _count: {
+          select: { bookmark: true },
+        },
+        tag: {
+          select: {
+            id: true,
+            name: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+        subCategory: {
+          select: {
+            id: true,
+            name: true,
+            createdAt: true,
+            updatedAt: true,
+            categoryId: true,
+            category: {
+              select: {
+                id: true,
+                name: true,
+                createdAt: true,
+                updatedAt: true,
+              },
+            },
+          },
+        },
+      },
+    });
     if (!tool) {
       throw new NotFoundException(`Tool with ID ${id} not found`);
     }
