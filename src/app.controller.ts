@@ -33,7 +33,12 @@ export class AppController {
     @Res() res: Response,
     @Query('state') state: string,
   ) {
+    // Extract user from request
     const user = req.user;
+    this.logger.debug(`123State ${state}: ${JSON.stringify(req.session)}`);
+
+    // Decode the state parameter to get the origin URL
+    // const decodedState: any = decodeURIComponent(state || '{}');
     const redirectUrl = `${(req?.session as any)?.origin}/login-success?user=${encodeURIComponent(JSON.stringify(user))}`;
     console.log(state);
     // Redirect to the origin URL with user info or token
