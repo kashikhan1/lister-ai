@@ -28,7 +28,7 @@ async function bootstrap() {
   // Setup session middleware
   app.use(
     session({
-      secret: 'your-secret-key',
+      secret: 'your-secret-key-new',
       resave: false,
       saveUninitialized: false,
       cookie: { secure: false }, // Set secure: true if using HTTPS
