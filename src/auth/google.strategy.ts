@@ -21,8 +21,8 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   }
 
   authorizationParams(req: any): any {
-    const origin = req.session.origin;
-    this.logger.debug(`Authorization params - Origin: ${origin}`);
+    const origin = req?.session?.origin;
+    this.logger.debug(`Authorization params - origins : ${origin}`);
     return { state: JSON.stringify({ origin }) };
   }
 
@@ -34,8 +34,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     done: VerifyCallback,
   ): Promise<any> {
     try {
-      this.logger.debug(`Authorization params: ${JSON.stringify(req.query)}`);
-
       const { name, emails, photos } = profile;
       const user = {
         email: emails?.[0]?.value || null,
