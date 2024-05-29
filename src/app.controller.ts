@@ -7,6 +7,8 @@ import {
   Post,
   UploadedFile,
   UseInterceptors,
+  Query,
+  Logger,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -15,23 +17,27 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('google')
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  private readonly logger = new Logger(AppController.name);
+
+  constructor(private readonly appService: AppService) { }
   @Get()
   @UseGuards(AuthGuard('google'))
-  async googleAuth() {}
+  async googleAuth(@Query('origin') origin: string) {
+    this.logger.debug(`Origin: ${origin}`);
+  }
 
   @Get('redirect')
   @UseGuards(AuthGuard('google'))
-  googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
-    const { user } = this.appService.googleLogin(req) as any;
-    const targetUrl: string = req.headers.host;
-    console.log(targetUrl);
-    const redirectUrl: string = targetUrl.includes('http')
-      ? targetUrl
-      : `http://${targetUrl}`;
-    return res.redirect(
-      `${redirectUrl}?data=${user ? JSON.stringify(user) : ''}`,
-    );
+  async googleAuthRedirect(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Query('state') state: string,
+  ) {
+    const user = req.user;
+    const redirectUrl = `${(req?.session as any)?.origin}/login-success?user=${encodeURIComponent(JSON.stringify(user))}`;
+    console.log(state);
+    // Redirect to the origin URL with user info or token
+    res.redirect(redirectUrl);
   }
 
   @Post('upload')

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
@@ -15,6 +15,7 @@ import { TagsModule } from './tags/tags.module';
 import { FaqsModule } from './faqs/faqs.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
 import { ChatsModule } from './chats/chats.module';
+import { SaveOriginMiddleware } from './save-origin.middleware';
 
 @Module({
   imports: [
@@ -35,4 +36,8 @@ import { ChatsModule } from './chats/chats.module';
   controllers: [AppController],
   providers: [AppService, GoogleStrategy],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(SaveOriginMiddleware).forRoutes('google'); // Apply to the specific route
+  }
+}
