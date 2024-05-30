@@ -7,9 +7,7 @@ export class SaveOriginMiddleware implements NestMiddleware {
     const origin = req.query.origin as string;
     if (origin) {
       console.log(`.........................`);
-      console.log(`.........................`);
       console.log(origin);
-      console.log(`.........................`);
       console.log(`.........................`);
       (req as any).session.origin = origin;
     }

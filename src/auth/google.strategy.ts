@@ -20,14 +20,8 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     });
   }
 
-  authorizationParams(req: any): any {
-    const origin = req?.session?.origin;
-    this.logger.debug(`Authorization params - origins : ${origin}`);
-    return { state: JSON.stringify({ origin }) };
-  }
-
   async validate(
-    req: any,
+    _req: any,
     accessToken: string,
     refreshToken: string,
     profile: any,
