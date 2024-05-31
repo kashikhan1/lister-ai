@@ -54,11 +54,9 @@ Question: {input}`;
         sqlOutputKey: 'postgres_sql',
         prompt,
       });
-  
-      console.log(this.chain);
-    
-    });
 
+      // console.log(this.chain);
+    });
   }
 
   async find() {
