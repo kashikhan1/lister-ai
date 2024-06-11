@@ -25,6 +25,9 @@ export class ToolEntity implements Tool {
   body: string;
 
   @ApiProperty()
+  url?: string;
+
+  @ApiProperty()
   imgurl: string;
 
   @ApiProperty()

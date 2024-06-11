@@ -22,5 +22,9 @@ export class QueryOptionsDto {
 
   @IsOptional()
   @IsString()
+  userId?: string;
+
+  @IsOptional()
+  @IsString()
   featured?: string;
 }

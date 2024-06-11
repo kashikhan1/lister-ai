@@ -29,7 +29,7 @@ export class ToolsController {
   @Get()
   @ApiOkResponse({ type: ToolEntity, isArray: true })
   async findAll(@Query() queryOptions: QueryOptionsDto) {
-    const { page, pageSize, search, orderBy } = queryOptions;
+    const { page, pageSize, search, orderBy, userId } = queryOptions;
     const skip = (page - 1) * pageSize > 0 ? (page - 1) * pageSize : 0;
     const take = pageSize || 20;
     const where = search
@@ -46,6 +46,7 @@ export class ToolsController {
       take,
       where,
       orderByObject,
+      userId,
     );
     return tools.map((tool) => new ToolEntity(tool));
   }

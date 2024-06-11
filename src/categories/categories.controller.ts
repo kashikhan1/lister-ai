@@ -26,7 +26,7 @@ export class CategoriesController {
 
   @Get()
   @ApiOkResponse({ type: CategoryEntity, isArray: true })
-  findAll() {
+  async findAll() {
     return this.categoriesService.findAll();
   }
 

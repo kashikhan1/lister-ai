@@ -19,4 +19,9 @@ export class CreateSubcategoryDto {
   @IsNotEmpty()
   @ApiProperty()
   categoryId: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty()
+  description?: string;
 }

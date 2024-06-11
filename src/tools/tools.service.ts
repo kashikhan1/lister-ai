@@ -11,7 +11,13 @@ export class ToolsService {
     return this.prisma.tool.create({ data: createToolDto });
   }
 
-  async findAll(skip: number, take: number, where: any, orderBy: any) {
+  async findAll(
+    skip: number,
+    take: number,
+    where: any,
+    orderBy: any,
+    bookmarkUserId: any,
+  ) {
     return this.prisma.tool.findMany({
       select: {
         id: true,
@@ -30,6 +36,19 @@ export class ToolsService {
         _count: {
           select: { bookmark: true },
         },
+        bookmark: bookmarkUserId
+          ? {
+              where: {
+                userId: bookmarkUserId,
+              },
+              select: {
+                id: true,
+                userId: true,
+                createdAt: true,
+                updatedAt: true,
+              },
+            }
+          : false,
         tag: {
           select: {
             id: true,

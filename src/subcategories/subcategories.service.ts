@@ -5,18 +5,76 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class SubcategoriesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   create(createSubcategoryDto: CreateSubcategoryDto) {
     return this.prisma.subCategory.create({ data: createSubcategoryDto });
   }
 
-  findAll() {
-    return this.prisma.subCategory.findMany({});
+  async findAll() {
+    const subCategory = await this.prisma.subCategory.findMany({
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+        updatedAt: true,
+        tool: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            body: true,
+            imgurl: true,
+            topic: true,
+            views: true,
+            published: true,
+            featured: true,
+            verified: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+        _count: {
+          select: {
+            tool: true,
+          },
+        },
+      },
+    });
+    return subCategory;
   }
 
   findOne(id: number) {
-    const subCategory = this.prisma.subCategory.findUnique({ where: { id } });
+    const subCategory = this.prisma.subCategory.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+        updatedAt: true,
+        tool: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            body: true,
+            imgurl: true,
+            topic: true,
+            views: true,
+            published: true,
+            featured: true,
+            verified: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+        _count: {
+          select: {
+            tool: true,
+          },
+        },
+      },
+    });
     if (!subCategory) {
       throw new NotFoundException(`Sub Category with ID ${id} not found`);
     }

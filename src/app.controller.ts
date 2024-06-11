@@ -24,7 +24,19 @@ export class AppController {
   async googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
     // Extract user from request
     const user = req.user;
-    const redirectUrl = `${process.env.REDIRECT_URL}?user=${encodeURIComponent(JSON.stringify(user))}`;
+    const redirectUrl = `/google/success?user=${encodeURIComponent(JSON.stringify(user))}`;
+
+    console.log(redirectUrl, process.env.REDIRECT_URL);
+    res.redirect(redirectUrl);
+  }
+
+  @Get('success')
+  async googlLoginSuccess(@Req() req: Request, @Res() res: Response) {
+    // Extract user from request
+    // const user = req.user;
+    const redirectUrl = `${process.env.REDIRECT_URL}/user=${JSON.stringify(req.query.user)}`;
+
+    console.log(redirectUrl, process.env.REDIRECT_URL);
     res.redirect(redirectUrl);
   }
 

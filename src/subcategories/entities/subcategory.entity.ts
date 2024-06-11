@@ -19,5 +19,8 @@ export class SubCategoryEntity implements SubCategory {
   name: string;
 
   @ApiProperty()
+  description?: string;
+
+  @ApiProperty()
   categoryId: number;
 }

@@ -27,6 +27,11 @@ export class CreateToolDto {
   @IsString()
   @ApiProperty()
   @IsOptional()
+  url: string;
+
+  @IsString()
+  @ApiProperty()
+  @IsOptional()
   imgurl: string;
 
   @IsString()
