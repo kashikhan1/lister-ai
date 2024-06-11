@@ -16,6 +16,7 @@ export class SubcategoriesService {
       select: {
         id: true,
         name: true,
+        description: true,
         createdAt: true,
         updatedAt: true,
         tool: {
@@ -23,6 +24,7 @@ export class SubcategoriesService {
             id: true,
             name: true,
             description: true,
+            url: true,
             body: true,
             imgurl: true,
             topic: true,
@@ -50,6 +52,7 @@ export class SubcategoriesService {
       select: {
         id: true,
         name: true,
+        description: true,
         createdAt: true,
         updatedAt: true,
         tool: {
@@ -57,6 +60,7 @@ export class SubcategoriesService {
             id: true,
             name: true,
             description: true,
+            url: true,
             body: true,
             imgurl: true,
             topic: true,

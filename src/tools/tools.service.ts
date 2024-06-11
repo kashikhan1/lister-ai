@@ -22,6 +22,7 @@ export class ToolsService {
       select: {
         id: true,
         name: true,
+        url: true,
         body: true,
         imgurl: true,
         topic: true,
@@ -61,6 +62,7 @@ export class ToolsService {
           select: {
             id: true,
             name: true,
+            description: true,
             createdAt: true,
             updatedAt: true,
             categoryId: true,
@@ -87,6 +89,7 @@ export class ToolsService {
       where: { id },
       select: {
         id: true,
+        url: true,
         name: true,
         body: true,
         imgurl: true,
@@ -114,6 +117,7 @@ export class ToolsService {
           select: {
             id: true,
             name: true,
+            description: true,
             createdAt: true,
             updatedAt: true,
             categoryId: true,

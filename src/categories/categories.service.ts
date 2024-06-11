@@ -5,7 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class CategoriesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   create(createCategoryDto: CreateCategoryDto) {
     return this.prisma.category.create({ data: createCategoryDto });
@@ -22,6 +22,7 @@ export class CategoriesService {
           select: {
             id: true,
             name: true,
+            description: true,
             createdAt: true,
             updatedAt: true,
             tool: {
@@ -29,6 +30,7 @@ export class CategoriesService {
                 id: true,
                 name: true,
                 description: true,
+                url: true,
                 body: true,
                 imgurl: true,
                 topic: true,
@@ -64,6 +66,7 @@ export class CategoriesService {
           select: {
             id: true,
             name: true,
+            description: true,
             createdAt: true,
             updatedAt: true,
             tool: {
@@ -71,6 +74,7 @@ export class CategoriesService {
                 id: true,
                 name: true,
                 description: true,
+                url: true,
                 body: true,
                 imgurl: true,
                 topic: true,
